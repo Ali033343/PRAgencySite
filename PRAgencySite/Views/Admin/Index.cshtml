@@ -1,0 +1,40 @@
+﻿@model Influencer
+
+<h2>Add New Influencer</h2>
+
+<form asp-action="AddInfluencer" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InstagramHandle"></label>
+        <input asp-for="InstagramHandle" class="form-control" />
+        <span asp-validation-for="InstagramHandle" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FollowersCount"></label>
+        <input asp-for="FollowersCount" class="form-control" />
+        <span asp-validation-for="FollowersCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProfilePicture"></label>
+        <input asp-for="ProfilePicture" type="file" class="form-control" />
+        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+    <label asp-for="Niche"></label>
+    <input asp-for="Niche" class="form-control" />
+    <span asp-validation-for="Niche" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Influencer</button>
+</form>
+
+<div>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary mt-5">Back to Site</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<dynamic>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AliMara PR</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header, .about-us, .influencers, .brands {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .influencer-card {
+            margin: 20px;
+        }
+
+            .influencer-card img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Welcome to AliMara PR</h1>
+            <p>Your bridge to powerful influencer partnerships</p>
+        </div>
+    </header>
+
+    <section class="about-us">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>AliMara PR is dedicated to bridging the gap between brands and influencers to create impactful, authentic, and engaging campaigns.</p>
+            <p>Founded by Ali and Ammara, our agency is built on a foundation of trust, creativity, and strategic vision.</p>
+        </div>
+    </section>
+
+    <section class="influencers">
+        <div class="container">
+            <h2>Influencers</h2>
+            <div class="row">
+                @foreach (var influencer in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img src="@influencer.ProfilePictureUrl" class="card-img-top" alt="@influencer.Name">
+                            <div class="card-body">
+                                <h5 class="card-title">@influencer.Name</h5>
+                                <p class="card-text">@influencer.Niche</p>
+                                <p class="card-text">Followers: @influencer.FollowersCount</p>
+                                <a href="https://www.instagram.com/@influencer.InstagramHandle" target="_blank" class="btn btn-primary">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="brands">
+        <div class="container">
+            <h2>Brands</h2>
+            <p>We collaborate with a diverse range of brands to deliver outstanding PR campaigns.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 AliMara PR. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
