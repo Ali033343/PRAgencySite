@@ -41,17 +41,7 @@ namespace PRAgencySite.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.ProfilePicture != null)
-                {
-                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfilePicture.FileName;
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await model.ProfilePicture.CopyToAsync(fileStream);
-                    }
-                    model.ProfilePictureUrl = "/uploads/" + uniqueFileName;
-                }
+               
 
                 // Add the influencer to the database
                 _context.Influencers.Add(model);

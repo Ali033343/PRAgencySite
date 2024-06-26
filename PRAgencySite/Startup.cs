@@ -27,11 +27,12 @@ namespace PRAgencySite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddHttpClient<InstagramService>();
             services.AddDbContext<PRAgencyContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Register InstagramService with the access token
-            services.AddSingleton(new InstagramService("IGQWRPTE1sMDlQbHRnTDQtMEpGdC1pRXBMZAUUtWXNGb2tCYUJoX25BR0tTZAlhOZAzgxMmthNmNRWHdPUVdwUUprNkt4VERPM2hSQnJNUDVBdTRkc0h3YWtJOG5nZAU1VSzBEYzE5OGFoSWdVQVZAsXzBuOUxCVks0VnMZD\r\n"));
+           
         }
 
 
