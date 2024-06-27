@@ -46,7 +46,7 @@ namespace PRAgencySite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+
             var influencers = _context.Influencers.ToList();
             foreach (var influencer in influencers)
             {
@@ -58,7 +58,12 @@ namespace PRAgencySite.Controllers
                     influencer.ProfilePictureUrl = userProfile.Data.ProfilePicUrlHd;
                 }
             }
-            return View(influencers);
+
+            // Order influencers by FollowersCount in descending order
+            var orderedInfluencers = influencers.OrderByDescending(i => i.FollowersCount).ToList();
+
+            return View(orderedInfluencers);
+
         }
     }
 

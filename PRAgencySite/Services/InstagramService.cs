@@ -26,7 +26,7 @@
                 Headers =
             {
                 { "x-rapidapi-host", "instagram-scraper-api2.p.rapidapi.com" },
-                { "x-rapidapi-key", "3d325b2487mshadaaf3092ca808dp11ef4fjsn35e43d606579" },
+                { "x-rapidapi-key", "41f26aa64amsh7e880d8e4fccc1bp10a5c3jsn6b603192a5f4" },
             },
             };
 
