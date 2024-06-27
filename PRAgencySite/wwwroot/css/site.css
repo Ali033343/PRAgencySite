@@ -69,3 +69,35 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+/* site.css or your custom CSS file */
+.carousel-item img {
+    height: 400px; /* Adjust height as needed */
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for caption */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+    .carousel-caption h5 {
+        font-size: 2rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1.2rem;
+    }
+/* Center logo on mobile view */
+@media (max-width: 767px) {
+    .navbar-brand {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+.logo-image {
+    height: 40px; /* Adjust the height as needed */
+    width: auto; /* Maintain aspect ratio */
+    display: block; /* Ensure it behaves as a block element */
+}
