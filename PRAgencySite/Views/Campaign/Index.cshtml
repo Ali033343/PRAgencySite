@@ -1,0 +1,37 @@
+﻿@model IEnumerable<PRAgencySite.Models.Campaign>
+
+@{
+    ViewData["Title"] = "Campaigns";
+}
+
+<h2>Campaigns</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Campaign</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Campaign Name</th>
+            <th>Description</th>
+            <th>Brand</th>
+            <th>Budget</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CampaignName</td>
+                <td>@item.Description</td>
+                <td>@item.Brand.Name</td>
+                <td>@item.Budget</td>
+                <td>@item.StartDate.ToShortDateString()</td>
+                <td>@item.EndDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
