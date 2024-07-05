@@ -1,0 +1,31 @@
+﻿@model IEnumerable<PRAgencySite.Models.Brand>
+
+@{
+    ViewData["Title"] = "Brands";
+}
+
+<h2>Brands</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Brand</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact Email</th>
+            <th>Contact Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.ContactEmail</td>
+                <td>@item.ContactPhone</td>
+            </tr>
+        }
+    </tbody>
+</table>

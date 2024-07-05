@@ -1,0 +1,71 @@
+﻿@model PRAgencySite.Models.Campaign
+
+@{
+    ViewData["Title"] = "Create Campaign";
+}
+
+<h2>Create Campaign</h2>
+
+<h4>Campaign</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="CampaignName" class="control-label"></label>
+                <input asp-for="CampaignName" class="form-control" />
+                <span asp-validation-for="CampaignName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NumberOfInfluencers" class="control-label"></label>
+                    <input asp-for="NumberOfInfluencers" class="form-control" />
+                    <span asp-validation-for="NumberOfInfluencers" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Budget" class="control-label"></label>
+                    <input asp-for="Budget" class="form-control" />
+                    <span asp-validation-for="Budget" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PostType" class="control-label"></label>
+                    <input asp-for="PostType" class="form-control" />
+                    <span asp-validation-for="PostType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Niche" class="control-label"></label>
+                    <input asp-for="Niche" class="form-control" />
+                    <span asp-validation-for="Niche" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <input asp-for="StartDate" class="form-control" type="date" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <input asp-for="EndDate" class="form-control" type="date" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BrandId" class="control-label">Brand</label>
+                    <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(ViewData["Brands"] as IEnumerable<PRAgencySite.Models.Brand>, "Id", "Name"))"></select>
+                    <span asp-validation-for="BrandId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

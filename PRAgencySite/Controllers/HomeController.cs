@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,12 +22,19 @@ namespace PRAgencySite.Controllers
         private readonly PRAgencyContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly InstagramService _instagramService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+       
 
-        public HomeController(PRAgencyContext context, IWebHostEnvironment hostingEnvironment, InstagramService instagramService)
+        public HomeController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, PRAgencyContext context, InstagramService instagramService, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _instagramService = instagramService;
+            _userManager = userManager;
+            _signInManager = signInManager;
+
+
         }
 
         // HomeController.cs
@@ -43,9 +52,27 @@ namespace PRAgencySite.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
+            if (_signInManager.IsSignedIn(User))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                if (roles.Contains("Admin"))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else if (roles.Contains("Influencer"))
+                {
+                    return RedirectToAction("Index", "Influencer");
+                }
+                else if (roles.Contains("Brand"))
+                {
+                    return RedirectToAction("Index", "Brand");
+                }
+            }
 
             var influencers = _context.Influencers.ToList();
             foreach (var influencer in influencers)
