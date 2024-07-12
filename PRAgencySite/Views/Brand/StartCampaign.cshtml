@@ -1,0 +1,43 @@
+﻿@model StartCampaignViewModel
+
+@{
+    ViewData["Title"] = "Start a Campaign";
+}
+
+<h1>Start a Campaign</h1>
+
+<form asp-action="StartCampaign" method="post">
+    <div class="form-group">
+        <label asp-for="ReelsCount">Number of Reels</label>
+        <input asp-for="ReelsCount" class="form-control" />
+        <span asp-validation-for="ReelsCount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PostsCount">Number of Posts</label>
+        <input asp-for="PostsCount" class="form-control" />
+        <span asp-validation-for="PostsCount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StoriesCount">Number of Stories</label>
+        <input asp-for="StoriesCount" class="form-control" />
+        <span asp-validation-for="StoriesCount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Budget">Budget</label>
+        <input asp-for="Budget" class="form-control" />
+        <span asp-validation-for="Budget" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedInfluencerId">Select Desired Influencer</label>
+        <select asp-for="SelectedInfluencerId" asp-items="Model.Influencers" class="form-control" disabled>
+            <option value="">Select Influencer</option>
+        </select>
+        <span asp-validation-for="SelectedInfluencerId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

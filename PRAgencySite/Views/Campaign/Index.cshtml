@@ -4,33 +4,37 @@
     ViewData["Title"] = "Campaigns";
 }
 
-<h2>Campaigns</h2>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Campaign</a>
-</p>
+<h1>@ViewData["Title"]</h1>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Campaign Name</th>
-            <th>Description</th>
             <th>Brand</th>
+            <th>Influencer</th>
+            <th>Reels</th>
+            <th>Posts</th>
+            <th>Stories</th>
             <th>Budget</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>Status</th>
+            <th>Remarks</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var campaign in Model)
         {
             <tr>
-                <td>@item.CampaignName</td>
-                <td>@item.Description</td>
-                <td>@item.Brand.Name</td>
-                <td>@item.Budget</td>
-                <td>@item.StartDate.ToShortDateString()</td>
-                <td>@item.EndDate.ToShortDateString()</td>
+                <td>@campaign.Brand?.Name</td>
+                <td>@campaign.Influencer?.InstagramHandle</td>
+                <td>@campaign.ReelsCount</td>
+                <td>@campaign.PostsCount</td>
+                <td>@campaign.StoriesCount</td>
+                <td>@campaign.Budget</td>
+                <td>@campaign.Status</td>
+                <td>@campaign.Remarks</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@campaign.Id" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
         }
     </tbody>

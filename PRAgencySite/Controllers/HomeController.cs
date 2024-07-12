@@ -22,11 +22,11 @@ namespace PRAgencySite.Controllers
         private readonly PRAgencyContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly InstagramService _instagramService;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-       
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public HomeController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, PRAgencyContext context, InstagramService instagramService, IWebHostEnvironment hostingEnvironment)
+
+        public HomeController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, PRAgencyContext context, InstagramService instagramService, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
@@ -52,17 +52,40 @@ namespace PRAgencySite.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+        public IActionResult GetImageBrand(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return NotFound();
+            }
+
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images/"+imageUrl.TrimStart('/'));
+            var fileExists = System.IO.File.Exists(filePath);
+            if (!fileExists)
+            {
+                return NotFound();
+            }
+
+            var image = System.IO.File.OpenRead(filePath);
+            return File(image, "image/jpeg");
+        }
         [Authorize]
         public async Task<IActionResult> Index()
         {
             if (_signInManager.IsSignedIn(User))
             {
                 var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    // Handle the case where user is not found
+                    return NotFound("User not found");
+                }
+
                 var roles = await _userManager.GetRolesAsync(user);
 
                 if (roles.Contains("Admin"))
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("ManageCampaigns", "Admin");
                 }
                 else if (roles.Contains("Influencer"))
                 {
@@ -74,7 +97,7 @@ namespace PRAgencySite.Controllers
                 }
             }
 
-            var influencers = _context.Influencers.ToList();
+            var influencers = await _context.Influencers.ToListAsync();
             foreach (var influencer in influencers)
             {
                 var userProfile = await _instagramService.GetUserProfileAsync(influencer.InstagramHandle);
@@ -89,10 +112,20 @@ namespace PRAgencySite.Controllers
             // Order influencers by FollowersCount in descending order
             var orderedInfluencers = influencers.OrderByDescending(i => i.FollowersCount).ToList();
 
-            return View(orderedInfluencers);
+            var brands = await _context.Brands.ToListAsync();
 
+            var viewModel = new HomeIndexViewModel
+            {
+                Influencers = orderedInfluencers,
+                Brands = brands
+            };
+
+            return View(viewModel);
         }
+
+      
+
+
+
     }
-
-
 }

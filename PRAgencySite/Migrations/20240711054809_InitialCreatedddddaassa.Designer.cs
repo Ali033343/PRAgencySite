@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRAgencySite.Data;
 
 namespace PRAgencySite.Migrations
 {
     [DbContext(typeof(PRAgencyContext))]
-    partial class PRAgencyContextModelSnapshot : ModelSnapshot
+    [Migration("20240711054809_InitialCreatedddddaassa")]
+    partial class InitialCreatedddddaassa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

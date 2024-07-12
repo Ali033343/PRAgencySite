@@ -1,30 +1,49 @@
-﻿@model IEnumerable<PRAgencySite.Models.Brand>
+﻿@model PRAgencySite.Models.Brand
 
 @{
-    ViewData["Title"] = "Brands";
+    ViewData["Title"] = "Brand Dashboard";
 }
 
-<h2>Brands</h2>
+<h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add New Brand</a>
-</p>
+<p>Name: @Model.Name</p>
+<p>Description: @Model.Description</p>
 
+<a asp-action="StartCampaign" class="btn btn-primary">Start a Campaign</a>
+
+<h2>Your Campaigns</h2>
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Contact Email</th>
-            <th>Contact Phone</th>
+            <th>Campaign ID</th>
+            <th>Reels</th>
+            <th>Posts</th>
+            <th>Stories</th>
+            <th>Budget</th>
+            <th>Status</th>
+            <th>Assigned Influencer</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var campaign in Model.Campaigns)
         {
             <tr>
-                <td>@item.Name</td>
-                <td>@item.ContactEmail</td>
-                <td>@item.ContactPhone</td>
+                <td>@campaign.Id</td>
+                <td>@campaign.ReelsCount</td>
+                <td>@campaign.PostsCount</td>
+                <td>@campaign.StoriesCount</td>
+                <td>@campaign.Budget</td>
+                <td>@campaign.Status</td>
+                <td>
+                    @if (campaign.Status == "Accepted by Influencer")
+                    {
+                        @campaign.Influencer.Name
+                    }
+                    else
+                    {
+                        <em>Pending</em>
+                    }
+                </td>
             </tr>
         }
     </tbody>

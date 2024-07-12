@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Influencer>
+﻿@model HomeIndexViewModel
 
 @functions {
     public string FormatFollowersCount(int? followersCount)
@@ -80,7 +80,7 @@
         </div>
     </div>
     <div class="row">
-        @foreach (var influencer in Model.Take(3))
+        @foreach (var influencer in Model.Influencers.Take(3))
         {
             <div class="col-md-4 mb-4 influencer">
                 <div class="card">
@@ -96,7 +96,7 @@
         }
     </div>
     <div class="row d-none" id="moreInfluencers">
-        @foreach (var influencer in Model.Skip(3))
+        @foreach (var influencer in Model.Influencers.Skip(3))
         {
             <div class="col-md-4 mb-4 influencer">
                 <div class="card">
@@ -111,7 +111,7 @@
             </div>
         }
     </div>
-    @if (Model.Count() > 3)
+    @if (Model.Influencers.Count() > 3)
     {
         <div class="row mt-4">
             <div class="col-md-12 text-center">
@@ -126,17 +126,26 @@
             </div>
         </div>
     }
+
     <div class="row mt-5">
         <div class="col-md-12">
             <h2>Brands</h2>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <div class="alert alert-info text-center" role="alert">
-                Coming soon for some cool brands.
+        @foreach (var brand in Model.Brands)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@Url.Action("GetImageBrand", "Home", new { imageUrl = brand.LogoUrl })" class="card-img-top" alt="@brand.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@brand.Name</h5>
+                        <p class="card-text">@brand.Description</p>
+                        <p class="card-text">Niche: @brand.Niche</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
@@ -145,8 +154,8 @@
         document.getElementById('seeMoreBtn').addEventListener('click', function () {
             document.getElementById('moreInfluencers').classList.remove('d-none');
             document.getElementById('seeLessContainer').classList.remove('d-none');
-            document.getElementById('seeMoreContainer').classList.add('d-none');
-        });
+            document.getElementById('seeMoreContainer').classList.add('d-none
+                });
 
         document.getElementById('seeLessBtn').addEventListener('click', function () {
             document.getElementById('moreInfluencers').classList.add('d-none');
