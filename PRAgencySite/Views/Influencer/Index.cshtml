@@ -1,0 +1,118 @@
+﻿@model PRAgencySite.Models.Influencer
+
+@{
+    ViewData["Title"] = "Influencer Dashboard";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Name: @Model.Name</p>
+<p>Instagram Handle: @Model.InstagramHandle</p>
+<p>Niche: @Model.Niche</p>
+
+<h2>Campaigns</h2>
+@if (Model.Campaigns != null && Model.Campaigns.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Posts</th>
+                <th>Reels</th>
+                <th>Stories</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var campaign in Model.Campaigns)
+            {
+                <tr>
+                    <td>@campaign.Brand.Name</td>
+                    <td>@campaign.PostsCount</td>
+                    <td>@campaign.ReelsCount</td>
+                    <td>@campaign.StoriesCount</td>
+                    <td>@campaign.Budget</td>
+                    <td>@campaign.Status</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-@campaign.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@campaign.Id">
+                                @if (campaign.Status == "Assigned" || campaign.Status == "Reassigned")
+                                {
+                                    <form asp-action="AcceptCampaign" method="post" class="dropdown-item">
+                                        <input type="hidden" name="campaignId" value="@campaign.Id" />
+                                        <button type="submit" class="btn btn-success">Accept</button>
+                                    </form>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#rejectModal-@campaign.Id">Reject</a>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bargainModal-@campaign.Id">Bargain</a>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No campaigns assigned to you yet.</p>
+}
+
+@foreach (var campaign in Model.Campaigns)
+{
+    if (campaign.Status == "Assigned" || campaign.Status == "Reassigned")
+    {
+        <!-- Reject Modal -->
+        <div class="modal fade" id="rejectModal-@campaign.Id" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel-@campaign.Id" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rejectModalLabel-@campaign.Id">Reject Campaign</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-action="RejectCampaign" method="post">
+                            <input type="hidden" name="campaignId" value="@campaign.Id" />
+                            <div class="form-group">
+                                <label for="reason">Reason for rejection:</label>
+                                <input type="text" name="reason" class="form-control" placeholder="Reason for rejection" required />
+                            </div>
+                            <button type="submit" class="btn btn-danger">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bargain Modal -->
+        <div class="modal fade" id="bargainModal-@campaign.Id" tabindex="-1" role="dialog" aria-labelledby="bargainModalLabel-@campaign.Id" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bargainModalLabel-@campaign.Id">Bargain Campaign</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-action="BargainCampaign" method="post">
+                            <input type="hidden" name="campaignId" value="@campaign.Id" />
+                            <div class="form-group">
+                                <label for="newPrice">New price:</label>
+                                <input type="number" name="newPrice" class="form-control" placeholder="New price" required />
+                            </div>
+                            <button type="submit" class="btn btn-warning">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

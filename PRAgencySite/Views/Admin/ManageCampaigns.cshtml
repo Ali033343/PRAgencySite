@@ -1,0 +1,100 @@
+﻿@model ManageCampaignsViewModel
+
+@{
+    ViewData["Title"] = "Manage Campaigns";
+}
+
+<h1>Manage Campaigns</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Influencer</th>
+            <th>Reels</th>
+            <th>Posts</th>
+            <th>Stories</th>
+            <th>Budget</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var campaign in Model.Campaigns)
+        {
+            <tr>
+                <td>@campaign.Brand.Name</td>
+                <td>@(campaign.InfluencerId != null ? campaign.Influencer.Name : "Unassigned")</td>
+                <td>@campaign.ReelsCount</td>
+                <td>@campaign.PostsCount</td>
+                <td>@campaign.StoriesCount</td>
+                <td>@campaign.Budget</td>
+                <td>@campaign.Status</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-@campaign.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Actions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@campaign.Id">
+                            @if (campaign.Status == "Assigned")
+                            {
+                                <a class="dropdown-item" href="#" id="reassignModalTrigger-@campaign.Id" data-toggle="modal" data-target="#reassignModal-@campaign.Id">Reassign</a>
+                            }
+                            else if (campaign.Status == "Rejected by Influencer")
+                            {
+                                <a class="dropdown-item" href="#" id="reassignModalTrigger-@campaign.Id" data-toggle="modal" data-target="#reassignModal-@campaign.Id">Reassign</a>
+                            }
+                            else if (campaign.Status == "Bargain Requested by Influencer")
+                            {
+                                <a class="dropdown-item" href="#" id="reassignModalTrigger-@campaign.Id" data-toggle="modal" data-target="#reassignModal-@campaign.Id">Reassign</a>
+                            }
+                            else if (campaign.Status == "Accepted by Influencer")
+                            {
+                                <form asp-action="ApproveCampaign" method="post">
+                                    <input type="hidden" name="campaignId" value="@campaign.Id" />
+                                    <button type="submit" class="btn btn-success dropdown-item">Approve</button>
+                                </form>
+                               
+                            }
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@foreach (var campaign in Model.Campaigns)
+{
+    if (campaign.Status == "Assigned" || campaign.Status == "Rejected by Influencer" || campaign.Status == "Bargain Requested by Influencer")
+    {
+        <div class="modal fade" id="reassignModal-@campaign.Id" tabindex="-1" role="dialog" aria-labelledby="reassignModalLabel-@campaign.Id" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reassignModalLabel-@campaign.Id">Reassign Influencer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-action="ReassignInfluencer" method="post">
+                            <input type="hidden" name="campaignId" value="@campaign.Id" />
+                            <div class="form-group">
+                                <label for="newInfluencerId">Select Influencer:</label>
+                                <select name="newInfluencerId" class="form-control">
+                                    <option value="">Choose an influencer</option>
+                                    @foreach (var influencer in Model.Influencers)
+                                    {
+                                        <option value="@influencer.Id">@influencer.Name (@influencer.InstagramHandle)</option>
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
