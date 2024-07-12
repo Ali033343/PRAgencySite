@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using PRAgencySite.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace PRAgencySite.Data
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string[] roleNames = { "Admin", "Influencer", "Brand" };
             IdentityResult roleResult;
@@ -26,10 +27,11 @@ namespace PRAgencySite.Data
                 }
             }
 
-            var superUser = new IdentityUser
+            var superUser = new ApplicationUser
             {
                 UserName = "admin@primepragency.com",
-                Email = "admin@primepragency.com"
+                Email = "admin@primepragency.com",
+                WhatsAppNumber = "+923334311217" // replace with actual number
             };
 
             string userPWD = "Admin@123";

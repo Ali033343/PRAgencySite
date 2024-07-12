@@ -5,59 +5,110 @@ using System.IO;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using PRAgencySite.Services;
 
 namespace PRAgencySite.Controllers
 {
     public class AdminController : Controller
     {
         private readonly PRAgencyContext _context;
-        private readonly IWebHostEnvironment _hostingEnvironment;
-
-        public AdminController(PRAgencyContext context, IWebHostEnvironment hostingEnvironment)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly TwilioService _twilioService;
+        public AdminController(PRAgencyContext context, UserManager<ApplicationUser> userManager, TwilioService twilioService)
         {
             _context = context;
-            _hostingEnvironment = hostingEnvironment;
+            _userManager = userManager;
+            _twilioService = twilioService;
         }
 
-        private bool IsAdmin()
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult ManageCampaigns()
         {
-            // For now, we're hardcoding the admin check
-            // In a real application, you'd check the user's identity and role
-            return true;
-        }
+            var campaigns = _context.Campaigns.Include(c => c.Brand).Include(c => c.Influencer).ToList();
+            var influencers = _context.Influencers.Include(i => i.User).ToList();
 
-        public IActionResult Index()
-        {
-            if (!IsAdmin())
+            var viewModel = new ManageCampaignsViewModel
             {
-                return Unauthorized();
-            }
+                Campaigns = campaigns,
+                Influencers = influencers
+            };
 
-            return View();
+            return View(viewModel); // Pass the viewModel instead of campaigns
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddInfluencer(Influencer model)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AssignInfluencer(int campaignId, int ?influencerId)
         {
-            if (ModelState.IsValid)
+            var campaign = await _context.Campaigns.FindAsync(campaignId);
+
+            if (campaign == null)
             {
-               
-
-                // Add the influencer to the database
-                _context.Influencers.Add(model);
-                await _context.SaveChangesAsync();
-
-                // Set success message in TempData
-                TempData["SuccessMessage"] = "Influencer added successfully!";
-                return RedirectToAction("Index");
+                return NotFound("Campaign not found");
             }
 
-            // If there's an error, set error message in TempData
-            TempData["ErrorMessage"] = "Failed to add influencer. Please check the form.";
-            return View(model);
+            campaign.InfluencerId = influencerId;
+            campaign.Status = influencerId.HasValue ? "Assigned" : "Unassigned";
+            await _context.SaveChangesAsync();
+            var infId = await _context.Influencers.FindAsync(influencerId);
+            var influencer = await _userManager.FindByIdAsync(infId.UserId.ToString());
+            if (influencer != null)
+            {
+                var message = $"You have been assigned a new campaign. View details at: {Url.Action("Index", "Influencer", null, Request.Scheme)}";
+                _twilioService.SendWhatsAppMessage(influencer.WhatsAppNumber, message);
+            }
+            return RedirectToAction("ManageCampaigns");
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> SubmitBargainToBrand(int campaignId)
+        {
+            var campaign = await _context.Campaigns.FindAsync(campaignId);
+
+            if (campaign == null)
+            {
+                return NotFound();
+            }
+
+            campaign.Status = "Reviewed Bargain by Admin";
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageCampaigns));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReassignInfluencer(int campaignId, int newInfluencerId)
+        {
+            var campaign = await _context.Campaigns.FindAsync(campaignId);
+
+            if (campaign == null)
+            {
+                return NotFound();
+            }
+
+            campaign.InfluencerId = newInfluencerId;
+            campaign.Status = "Assigned";
+
+            await _context.SaveChangesAsync();
+            var infId = await _context.Influencers.FindAsync(newInfluencerId);
+            var influencer = await _userManager.FindByIdAsync(infId.UserId.ToString());
+            if (influencer != null)
+            {
+                var message = $"You have been assigned a new campaign. View details at: {Url.Action("Index", "Influencer", null, Request.Scheme)}";
+                _twilioService.SendWhatsAppMessage(influencer.WhatsAppNumber, message);
+            }
+            return RedirectToAction(nameof(ManageCampaigns));
+        }
     }
 }
+
+
 

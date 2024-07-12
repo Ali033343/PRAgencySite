@@ -1,14 +1,16 @@
 ﻿@model RegisterViewModel
-
 @{
     ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
+<h1>@ViewData["Title"]</h1>
 
+<h4>Create a new account.</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Register">
+        <form asp-action="Register" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -32,6 +34,59 @@
                 </select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
+
+            <div id="influencerFields" style="display:none;">
+                <div class="form-group">
+                    <label asp-for="InfluencerName" class="control-label"></label>
+                    <input asp-for="InfluencerName" class="form-control" />
+                    <span asp-validation-for="InfluencerName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InstagramHandle" class="control-label"></label>
+                    <input asp-for="InstagramHandle" class="form-control" />
+                    <span asp-validation-for="InstagramHandle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Niche" class="control-label"></label>
+                    <input asp-for="Niche" class="form-control" />
+                    <span asp-validation-for="Niche" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="WhatsAppNumber"></label>
+                    <input asp-for="WhatsAppNumber" class="form-control" />
+                    <span asp-validation-for="WhatsAppNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div id="brandFields" style="display:none;">
+                <div class="form-group">
+                    <label asp-for="BrandName" class="control-label"></label>
+                    <input asp-for="BrandName" class="form-control" />
+                    <span asp-validation-for="BrandName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Logo" class="control-label"></label>
+                    <input asp-for="Logo" class="form-control" type="file" />
+                    <span asp-validation-for="Logo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NicheBrand"></label>
+                    <input asp-for="NicheBrand" class="form-control" />
+                    <span asp-validation-for="NicheBrand" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                <label asp-for="WhatsAppNumberBrand"></label>
+                    <input asp-for="WhatsAppNumberBrand" class="form-control" />
+                    <span asp-validation-for="WhatsAppNumberBrand" class="text-danger"></span>
+            </div>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Register" class="btn btn-primary" />
             </div>
@@ -40,7 +95,25 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            function toggleFields() {
+                var role = $('#Role').val();
+                if (role === 'Influencer') {
+                    $('#influencerFields').show();
+                    $('#brandFields').hide();
+                } else if (role === 'Brand') {
+                    $('#influencerFields').hide();
+                    $('#brandFields').show();
+                } else {
+                    $('#influencerFields').hide();
+                    $('#brandFields').hide();
+                }
+            }
+
+            $('#Role').change(toggleFields);
+            toggleFields();
+        });
+    </script>
 }

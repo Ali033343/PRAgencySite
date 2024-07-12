@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PRAgencySite.Data;
+using PRAgencySite.Models;
 using PRAgencySite.Services;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,17 @@ namespace PRAgencySite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            //services.Configure<TwilioSettings>(Configuration.GetSection("Twilio"));
 
+            // Register TwilioService
+            services.AddSingleton<TwilioService>();
             services.AddDbContext<PRAgencyContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<PRAgencyContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+         .AddEntityFrameworkStores<PRAgencyContext>()
+         .AddDefaultTokenProviders();
+
 
             services.AddHttpClient<InstagramService>(); // Register InstagramService
         }
